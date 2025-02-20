@@ -57,12 +57,12 @@ import { storeToRefs } from "pinia";
 const storeMain = useMainStore();
 const { currentAuth } = storeToRefs(storeMain);
 import Pagination from "@/components/Pagination.vue"; // Pagination
+import { itemsPerPage } from "@/lib/constants";
 
 const campaigns = ref([]);
 
 // 페이지네이션 상태
 const currentPage = ref(1);
-const itemsPerPage = 25;
 
 // 총 페이지 수 계산
 const totalPages = computed(() => Math.ceil(campaigns.value.length / itemsPerPage));
@@ -97,12 +97,11 @@ const paginatedCampaigns = computed(() => {
   } else {
     return [];
   }
-  
 });
 
 onMounted(async()=>{
-  const res = await getCampaignList(1, 25);
+  const res = await getCampaignList(currentPage.value, 25);
   //console.log('res: ', res.result.content);
-  campaigns.value = res.result.content;
+  campaigns.value = res.data.content;
 })
 </script>

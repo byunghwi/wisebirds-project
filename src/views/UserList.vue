@@ -5,8 +5,10 @@
       <h2 class="text-lg font-bold">사용자 관리</h2>
     </header>
 
-    <div>
-      <button @click="openUserModal('create')">생성</button>
+    <div class="flex justify-start">
+      <button @click="openUserModal('create')" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 ease-in-out">
+        생성
+      </button>
     </div>
 
     <!-- 사용자 리스트 -->
@@ -47,71 +49,33 @@ import ModifyUserModal from "@/components/ModifyUserModal.vue";
 import { getUserList } from "@/api/users"
 import dayjs from 'dayjs'
 import { storeToRefs } from 'pinia'
-import { useModalStore } from "@/stores/modal.js";
+import { useModalStore } from "@/stores/modal";
+import { useUserStore } from "@/stores/user";
+import { itemsPerPage } from "@/lib/constants";
 
 const storeModal = useModalStore();
 const { isModalOpen } = storeToRefs(storeModal);
 const { closeModal } = storeModal;
 
-// 사용자자 데이터
-const users = ref([
-  {
-     "id":1,
-     "email":"user1@wisebirds.ai",
-     "name":"사용자1",
-     "last_login_at":"2022-11-14T07:37:24.914Z"
-  },
-  {
-     "id":2,
-     "email":"user2@wisebirds.ai",
-     "name":"사용자1",
-     "last_login_at":"2022-11-14T07:37:24.914Z"
-  },
-  {
-     "id":3,
-     "email":"user3@wisebirds.ai",
-     "name":"사용자2",
-     "last_login_at":"2022-11-14T07:37:24.914Z"
-  },
-  {
-     "id":4,
-     "email":"user3@wisebirds.ai",
-     "name":"사용자3",
-     "last_login_at":"2022-11-14T07:37:24.914Z"
-  },
-  {
-     "id":4,
-     "email":"user3@wisebirds.ai",
-     "name":"사용자3",
-     "last_login_at":"2022-11-14T07:37:24.914Z"
-  },
-  {
-     "id":4,
-     "email":"user3@wisebirds.ai",
-     "name":"사용자3",
-     "last_login_at":"2022-11-14T07:37:24.914Z"
-  },
-  {
-     "id":4,
-     "email":"user3@wisebirds.ai",
-     "name":"사용자3",
-     "last_login_at":"2022-11-14T07:37:24.914Z"
-  },
-]);
+const storeUser = useUserStore();
+const { userList } = storeToRefs(storeUser);
 
 const modalType = ref(null);
 
 // 페이지네이션 상태
 const currentPage = ref(1);
-const itemsPerPage = 5;
 
 // 총 페이지 수 계산
-const totalPages = computed(() => Math.ceil(users.value.length / itemsPerPage));
+const totalPages = computed(() => Math.ceil(userList.value.length / itemsPerPage));
 
 // 현재 페이지의 캠페인 데이터 가져오기
 const paginatedUsers = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  return users.value.slice(start, start + itemsPerPage);
+  if(userList.value.length) {
+    const start = (currentPage.value - 1) * itemsPerPage;
+    return userList.value.slice(start, start + itemsPerPage);
+  } else {
+    return [];
+  }
 });
 
 const formattedTime = (time) => {
@@ -124,6 +88,8 @@ const openUserModal = (type) => {
 }
 
 onMounted(async() => {
-  //const res = await getUserList();
+  const res = await getUserList(currentPage, 25);
+  console.log(res);
+  userList.value = res.data.content
 })
 </script>

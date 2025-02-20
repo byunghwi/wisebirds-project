@@ -1,19 +1,19 @@
 <template>
   <div class="flex justify-center items-center space-x-2 mt-4">
     <button @click="changePage(1)" :disabled="currentPage === 1"
-      class="px-3 py-1 rounded disabled:opacity-50">❮❮</button>
+      class="px-3 py-1 rounded cursor-pointer disabled:opacity-50 hover:bg-gray-300">❮❮</button>
     <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1"
-      class="px-3 py-1 rounded disabled:opacity-50">❮</button>
+      class="px-3 py-1 rounded cursor-pointer disabled:opacity-50 hover:bg-gray-300">❮</button>
 
     <button v-for="page in paginatedPages" :key="page" @click="changePage(page)"
-      :class="['px-3 py-1 rounded cursor-pointer', { 'bg-blue-500 text-white': currentPage === page }]">
+      :class="['px-3 py-1 rounded cursor-pointer hover:bg-gray-300', { 'bg-blue-500 text-white': currentPage === page }]">
       {{ page }}
     </button>
 
     <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages"
-      class="px-3 py-1 rounded cursor-pointer disabled:opacity-50">❯</button>
+      class="px-3 py-1 rounded cursor-pointer disabled:opacity-50 hover:bg-gray-300" >❯</button>
     <button @click="changePage(totalPages)" :disabled="currentPage === totalPages"
-      class="px-3 py-1 rounded cursor-pointer disabled:opacity-50">❯❯</button>
+      class="px-3 py-1 rounded cursor-pointer disabled:opacity-50 hover:bg-gray-300">❯❯</button>
   </div>
 </template>
 

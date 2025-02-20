@@ -79,7 +79,7 @@ const handleClickOutside = (event) => {
 
 onMounted(async() => {
   const resUSer = await getUserInfo();
-  userInfo.value = resUSer.result;
+  userInfo.value = resUSer.data;
 
   document.addEventListener("click", handleClickOutside);
 })
