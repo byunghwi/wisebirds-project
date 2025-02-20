@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :isOpen="isOpen" title="사용자 수정" size="xl" @close="closeModal">
+  <BaseModal :isOpen="isOpen" title="사용자 수정" size="md" @close="closeModal">
     <form @submit.prevent="submitForm">
       <!-- 아이디 -->
       <label class="block text-gray-700 font-medium mb-1">아이디<span class="text-red-500">*</span></label>

@@ -5,21 +5,19 @@
       <h2 class="text-lg font-bold">캠페인 관리</h2>
     </header>
 
-     <!-- 로딩 중 표시 -->
-     <div v-if="campaigns.length === 0">로딩 중...</div>
     <!-- 캠페인 리스트 -->
-    <div v-else>
+    <div>
       <table class="w-full border-collapse">
         <thead class="text-gray-500 border-t-1 border-b-1 border-gray-300">
           <tr>
-            <th class="p-1">상태</th>
-            <th class="p-1 text-left">캠페인명</th>
-            <th class="p-1 text-left">캠페인 목적</th>
-            <th class="p-1 text-right">노출수</th>
-            <th class="p-1 text-right">클릭수</th>
-            <th class="p-1 text-right">CTR</th>
-            <th class="p-1 text-right">동영상조회수</th>
-            <th class="p-1 text-right">VTR</th>
+            <th class="p-1 w-[5%]">상태</th>
+            <th class="p-1 w-[15%] text-left">캠페인명</th>
+            <th class="p-1 w-[20%] text-left">캠페인 목적</th>
+            <th class="p-1 w-[10%] text-right">노출수</th>
+            <th class="p-1 w-[10%] text-right">클릭수</th>
+            <th class="p-1 w-[10%] text-right">CTR</th>
+            <th class="p-1 w-[10%] text-right">동영상조회수</th>
+            <th class="p-1 w-[10%] text-right">VTR</th>
           </tr>
         </thead>
         <tbody>
@@ -54,6 +52,9 @@ import { ref, computed, onMounted } from "vue";
 import { getCampaignList } from "@/api/campaigns"
 import { useMainStore } from "@/stores/main.js";
 import { storeToRefs } from "pinia";
+import { useModalStore } from "@/stores/modal";
+const storeModal = useModalStore();
+const { showErrorModal } = storeModal;
 const storeMain = useMainStore();
 const { currentAuth } = storeToRefs(storeMain);
 import Pagination from "@/components/Pagination.vue"; // Pagination
@@ -100,8 +101,13 @@ const paginatedCampaigns = computed(() => {
 });
 
 onMounted(async()=>{
-  const res = await getCampaignList(currentPage.value, 25);
-  //console.log('res: ', res.result.content);
-  campaigns.value = res.data.content;
+  try {
+    const res = await getCampaignList(currentPage.value, 25);  
+    //console.log('res: ', res.result.content);
+    campaigns.value = res.data.content;
+  } catch (error) {
+    showErrorModal();
+  }
+  
 })
 </script>

@@ -4,7 +4,7 @@
     class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-10"
   >
     <div 
-      class="bg-white p-6 rounded-lg shadow-lg relative"
+      class="bg-white p-4 rounded-lg shadow-lg relative"
       :class="modalSize"
     >
       <button @click="closeModal" class="cursor-pointer absolute top-2 right-2 text-gray-500 hover:text-gray-700">
