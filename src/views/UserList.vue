@@ -1,8 +1,8 @@
 <template>
-  <div class="mx-auto">
+  <div class="mx-8">
     <!-- 상단 바 -->
-    <header class="flex justify-between items-center bg-gray-300 text-gray-700 p-4">
-      <h2 class="text-lg font-semibold">사용자 관리</h2>
+    <header class="flex justify-between items-center border-b-1 border-gray-300 text-gray-700 p-4">
+      <h2 class="text-lg font-bold">사용자 관리</h2>
     </header>
 
     <div>
@@ -10,22 +10,22 @@
     </div>
 
     <!-- 사용자 리스트 -->
-    <div class="overflow-x-auto mt-4">
-      <table class="w-full border-collapse border border-gray-200">
-        <thead>
-          <tr class="bg-gray-100">
-            <th class="p-2 border">아이디</th>
-            <th class="p-2 border">이름</th>
-            <th class="p-2 border">마지막 로그인 일시</th>
-            <th class="p-2 border">수정</th>
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse">
+        <thead class="text-gray-500 border-b-1 border-t-1 border-gray-300">
+          <tr>
+            <th class="p-1">아이디</th>
+            <th class="p-1">이름</th>
+            <th class="p-1">마지막 로그인 일시</th>
+            <th class="p-1">수정</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(user, index) in paginatedUsers" :key="index" class="text-center">
-            <td class="p-2 border text-left">{{ user.email }}</td>
-            <td class="p-2 border text-left">{{ user.name }}</td>
-            <td class="p-2 border text-left">{{ formattedTime(user.last_login_at) }}</td>
-            <td class="p-2 border text-center"><button @click="openUserModal('modify')">수정</button></td>
+          <tr v-for="(user, index) in paginatedUsers" :key="index" class="text-center text-gray-700 border-b-1 border-gray-300">
+            <td class="p-1 text-left">{{ user.email }}</td>
+            <td class="p-1 text-left">{{ user.name }}</td>
+            <td class="p-1 text-left">{{ formattedTime(user.last_login_at) }}</td>
+            <td class="p-1 text-center"><button @click="openUserModal('modify')">수정</button></td>
           </tr>
         </tbody>
       </table>
@@ -52,9 +52,6 @@ import { useModalStore } from "@/stores/modal.js";
 const storeModal = useModalStore();
 const { isModalOpen } = storeToRefs(storeModal);
 const { closeModal } = storeModal;
-
-// 사용자 역할 선택
-const selectedOption = ref("어드민");
 
 // 사용자자 데이터
 const users = ref([

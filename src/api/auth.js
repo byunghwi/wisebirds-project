@@ -1,7 +1,7 @@
 import axios from "axios";
 import { base_url } from "@/lib/constants"
 
-export const getUserInfo = async (params) => {
+export const getUserInfo = async () => {
   try {
     const response = await axios.get(`${base_url}/auth/me`);
     return response.data;

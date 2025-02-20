@@ -5,7 +5,7 @@
       <input v-model="name" class="border p-2 w-full rounded" />
 
       <div class="flex justify-end mt-4">
-        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+        <button type="submit" class="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
           생성
         </button>
       </div>
@@ -17,7 +17,7 @@
 import { ref } from "vue";
 import BaseModal from "@/components/BaseModal.vue";
 
-const props = defineProps({
+defineProps({
   isOpen: Boolean,
 });
 

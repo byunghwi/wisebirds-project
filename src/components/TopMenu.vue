@@ -1,42 +1,90 @@
 <template>
-  <div class="bg-gray-800 text-white flex justify-between items-center w-full px-6 py-3 fixed top-0 left-0">
-    <!-- 좌측: 로고 -->
-    <div class="text-xl font-bold">Wisebirds</div>
-
-    <!-- 가운데: 메뉴 버튼 -->
-    <div class="flex space-x-4">
-      <RouterLink to="/campaigns" class="hover:text-gray-300">캠페인</RouterLink>
-      <RouterLink v-if="isAdmin" to="/users" class="hover:text-gray-300">사용자</RouterLink>
+  <div class="bg-blue-500 text-white flex justify-between items-center w-full px-6 h-[50px] fixed">
+    <!-- 좌측: 로고 및 탭 메뉴 -->
+    <div class="flex items-center">
+      <RouterLink to="/" class="text-xl font-bold pr-4 hover:text-gray-300" >Wisebirds</RouterLink>
+      <RouterLink to="/campaigns" :class="`px-3 font-semibold hover:text-gray-300 
+      ${$route.path === '/campaigns' ? 'text-yellow-400 font-bold border-b-2 border-yellow-40' : ''}`">
+        캠페인
+      </RouterLink>
+      <RouterLink v-if="isAdmin" to="/users" :class="`px-3 font-semibold hover:text-gray-300 
+      ${$route.path === '/users' ? 'text-yellow-400 font-bold border-b-2 border-yellow-400' : ''}`">사용자</RouterLink>
     </div>
 
-    <!-- 우측: 사용자 정보 및 Select 박스 -->
-    <div class="flex items-center space-x-4">
-      <span class="cursor-pointer" @click="showUserInfo = true">{{ userId }}</span>
-      <select v-model="selectedRole" @change="changeRole" class="bg-gray-700 text-white px-2 py-1 rounded">
+    <!-- 우측: 사용자 정보 및 역할 선택 -->
+    <div class="flex items-center">
+      <div class="cursor-pointer hover:text-gray-300 flex items-center pr-4" @click.stop="togglePopup">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M5.121 17.804A3 3 0 017 17h10a3 3 0 012.121.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
+        </svg>
+        <span>{{ userInfo.email }}</span>
+      </div>
+      <!-- 사용자 정보 팝업 -->
+      <div v-if="showPopup" ref="popup"
+        class="absolute top-11 right-30 bg-white shadow-lg rounded-lg p-4 w-42 border border-gray-200">
+        <div class="text-center text-gray-600 font-bold text-lg">{{ userInfo.name }}</div>
+        <div class="text-center text-gray-600">{{ userInfo.email }}</div>
+        <div class="text-center text-gray-400">{{ userInfo.company.name }}</div>
+      </div>
+
+      <select v-model="currentAuth" @change="changeRole" class="bg-white text-gray-800 px-3 py-1 rounded">
         <option value="admin">어드민</option>
         <option value="manager">매니저</option>
         <option value="viewer">뷰어</option>
       </select>
     </div>
-
-    <!-- 내 정보 팝업 -->
-    <!-- <UserInfoPopup v-if="showUserInfo" @close="showUserInfo = false" /> -->
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-// import UserInfoPopup from '@/components/UserInfoPopup.vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { storeToRefs } from 'pinia'
+import { getUserInfo } from '@/api/auth'
+import { useMainStore } from "@/stores/main.js";
+import { useUserStore } from '@/stores/user';
+import router from '@/router';
 
-const userId = ref('user@example.com');
-const selectedRole = ref('admin');
-const showUserInfo = ref(false);
+const storeMain = useMainStore();
+const { currentAuth } = storeToRefs(storeMain);
 
-const isAdmin = computed(() => selectedRole.value === 'admin');
+const storeUser = useUserStore();
+const { userInfo } = storeToRefs(storeUser);
+
+//const showUserInfo = ref(false);
+
+const isAdmin = computed(() => currentAuth.value === 'admin');
+const popup = ref(null);
+const showPopup = ref(false);
+
+const togglePopup = () => {
+ showPopup.value = !showPopup.value
+ console.log('showPopup.value: ', showPopup.value)
+}
 
 const changeRole = () => {
-  if (selectedRole.value !== 'admin') {
-    window.location.href = "/campaigns"; // 사용자 메뉴 접근 차단
+  console.log(`auth: ${currentAuth.value}, isAdmin: ${isAdmin.value},`);
+  console.log( router.currentRoute.value.path);
+  if (currentAuth.value !== 'admin' && router.currentRoute.value.path == '/users') {
+    router.replace("/");
   }
 };
+
+const handleClickOutside = (event) => {
+  if (popup.value && !popup.value.contains(event.target)) {
+    console.log('handleClickOutside: ', popup.value, '-------------', event.target);
+    showPopup.value = false;
+  }
+};
+
+onMounted(async() => {
+  const resUSer = await getUserInfo();
+  userInfo.value = resUSer.result;
+
+  document.addEventListener("click", handleClickOutside);
+})
+
+onUnmounted(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 </script>

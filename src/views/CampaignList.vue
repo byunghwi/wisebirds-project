@@ -1,42 +1,42 @@
 <template>
-  <div class="mx-auto">
+  <div class="">
     <!-- 상단 바 -->
-    <header class="flex justify-between items-center bg-gray-300 text-gray-700 p-4">
-      <h2 class="text-lg font-semibold">캠페인 관리</h2>
+    <header class="flex justify-between items-center text-gray-700 p-4">
+      <h2 class="text-lg font-bold">캠페인 관리</h2>
     </header>
 
+     <!-- 로딩 중 표시 -->
+     <div v-if="campaigns.length === 0">로딩 중...</div>
     <!-- 캠페인 리스트 -->
-    <div class="overflow-x-auto mt-4">
-      <table class="w-full border-collapse border border-gray-200">
-        <thead>
-          <tr class="bg-gray-100 text-gray-700">
-            <th class="p-1 border">상태</th>
-            <th class="p-1 border text-left">캠페인명</th>
-            <th class="p-1 border text-left">캠페인 목적</th>
-            <th class="p-1 border text-right">노출수</th>
-            <th class="p-1 border text-right">클릭수</th>
-            <th class="p-1 border text-right">CTR</th>
-            <th class="p-1 border text-right">일일캠페인수</th>
-            <th class="p-1 border text-right">VTR</th>
+    <div v-else>
+      <table class="w-full border-collapse">
+        <thead class="text-gray-500 border-t-1 border-b-1 border-gray-300">
+          <tr>
+            <th class="p-1">상태</th>
+            <th class="p-1 text-left">캠페인명</th>
+            <th class="p-1 text-left">캠페인 목적</th>
+            <th class="p-1 text-right">노출수</th>
+            <th class="p-1 text-right">클릭수</th>
+            <th class="p-1 text-right">CTR</th>
+            <th class="p-1 text-right">동영상조회수</th>
+            <th class="p-1 text-right">VTR</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(campaign, index) in paginatedCampaigns" :key="index" class="text-center even:bg-gray-50">
-            <td class="p-1 border text-center">
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="campaign.active" class="sr-only peer" :disabled="campaign.disabled" />
-                <div
-                  class="w-11 h-6 bg-gray-300 rounded-full transition-all peer-checked:bg-blue-500 peer-checked:disabled:bg-gray-400">
-                </div>
+          <tr v-for="(campaign, index) in paginatedCampaigns" :key="index" class="text-center text-gray-700 border-b-1 border-gray-300">
+            <td class="p-1 text-center">
+              <label :class="['inline-flex items-center ', currentAuth !== 'admin' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer']">
+                <input type="checkbox"  v-model="campaign.enabled" class="sr-only peer" :disabled="currentAuth != 'admin'" >
+                <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-400 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-400 dark:peer-checked:bg-blue-400"></div>
               </label>
             </td>
-            <td class="p-1 border text-left">{{ campaign.name }}</td>
-            <td class="p-1 border text-left">{{ campaign.purpose }}</td>
-            <td class="p-1 border text-right">{{ campaign.exposure.toLocaleString() }}</td>
-            <td class="p-1 border text-right">{{ campaign.clicks.toLocaleString() }}</td>
-            <td class="p-1 border text-right">{{ Math.round(campaign.ctr) }}%</td>
-            <td class="p-1 border text-right">{{ campaign.dailyCampaigns }}</td>
-            <td class="p-1 border text-right">{{ Math.round(campaign.vtr) }}%</td>
+            <td class="p-1 text-left">{{ campaign.name }}</td>
+            <td class="p-1  text-left">{{ parseCampaignObjective(campaign.campaign_objective) }}</td>
+            <td class="p-1  text-right">{{ campaign.impressions.toLocaleString() }}</td>
+            <td class="p-1  text-right">{{ campaign.clicks.toLocaleString() }}</td>
+            <td class="p-1  text-right">{{ Math.round(campaign.ctr) }}%</td>
+            <td class="p-1  text-right">{{ campaign.video_views }}</td>
+            <td class="p-1  text-right">{{ Math.round(campaign.vtr) }}%</td>
           </tr>
         </tbody>
       </table>
@@ -52,55 +52,13 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { getCampaignList } from "@/api/campaigns"
+import { useMainStore } from "@/stores/main.js";
+import { storeToRefs } from "pinia";
+const storeMain = useMainStore();
+const { currentAuth } = storeToRefs(storeMain);
 import Pagination from "@/components/Pagination.vue"; // Pagination
 
-// 사용자 역할 선택
-const selectedOption = ref("어드민");
-
-// 캠페인 데이터
-const campaigns = ref([
-  { active: true, name: "캠페인1", purpose: "웹사이트 트래픽", exposure: 681359, clicks: 5318, ctr: 81, dailyCampaigns: 214, vtr: 23 },
-  { active: false, name: "캠페인2", purpose: "영상형 조회", exposure: 212524, clicks: 6535, ctr: 25, dailyCampaigns: 368, vtr: 53 },
-  { active: true, name: "캠페인3", purpose: "웹사이트 전환", exposure: 387097, clicks: 6593, ctr: 65, dailyCampaigns: 461, vtr: 66 },
-  { active: false, name: "캠페인4", purpose: "웹사이트 전환", exposure: 97121, clicks: 84, ctr: 5, dailyCampaigns: 946, vtr: 44 },
-  { active: true, name: "캠페인5", purpose: "판매", exposure: 400676, clicks: 2928, ctr: 5, dailyCampaigns: 992, vtr: 21 },
-  { active: false, name: "캠페인6", purpose: "판매", exposure: 814261, clicks: 9085, ctr: 18, dailyCampaigns: 254, vtr: 85 },
-  { active: true, name: "캠페인7", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: false, name: "캠페인8", purpose: "판매", exposure: 814261, clicks: 9085, ctr: 18, dailyCampaigns: 254, vtr: 85 },
-  { active: true, name: "캠페인9", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: false, name: "캠페인10", purpose: "판매", exposure: 814261, clicks: 9085, ctr: 18, dailyCampaigns: 254, vtr: 85 },
-  { active: true, name: "캠페인11", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인12", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인13", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인14", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인15", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인16", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인17", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인18", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인19", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인20", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인21", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인22", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인23", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인24", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인25", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인26", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인27", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인28", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인29", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인30", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인31", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인32", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인33", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인34", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인35", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인36", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인37", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인38", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인39", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  { active: true, name: "캠페인40", purpose: "브랜드 인지도 및 도달 범위", exposure: 108169, clicks: 2532, ctr: 29, dailyCampaigns: 37, vtr: 47 },
-  
-]);
+const campaigns = ref([]);
 
 // 페이지네이션 상태
 const currentPage = ref(1);
@@ -109,13 +67,42 @@ const itemsPerPage = 25;
 // 총 페이지 수 계산
 const totalPages = computed(() => Math.ceil(campaigns.value.length / itemsPerPage));
 
+// 캠페인 목적 파싱
+const parseCampaignObjective = (campaignObjective) => {
+  switch (campaignObjective) {
+    case "WEBSITE_CONVERSIONS":
+      return "웹사이트 전환";
+    case "WEBSITE_TRAFFIC":
+      return "웹사이트 트래픽";
+    case "SALES":
+      return "판매";
+    case "APP_INSTALLATION":
+      return "앱설치";
+    case "LEAD":
+      return "리드";
+    case "BRAND":
+      return "브랜드 인지도 및 도달 범위";
+    case "VIDEO_VIEWS":
+      return "동영상 조회";
+    default:
+      return "";
+  }
+};
+
 // 현재 페이지의 캠페인 데이터 가져오기
 const paginatedCampaigns = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  return campaigns.value.slice(start, start + itemsPerPage);
+  if(campaigns.value.length) {
+    const start = (currentPage.value - 1) * itemsPerPage;
+    return campaigns.value.slice(start, start + itemsPerPage);
+  } else {
+    return [];
+  }
+  
 });
 
 onMounted(async()=>{
-  //campaigns.value = await getCampaignList();
+  const res = await getCampaignList(1, 25);
+  //console.log('res: ', res.result.content);
+  campaigns.value = res.result.content;
 })
 </script>

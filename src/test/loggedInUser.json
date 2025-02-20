@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "email": "gpdldy91@gmail.com",
+  "name": "고병휘",
+  "company": {
+    "id": 1,
+    "name": "와이즈버즈"
+  }
+}
