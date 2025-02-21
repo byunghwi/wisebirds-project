@@ -84,7 +84,7 @@ byunghwi@byunghwi:~/wisebirds-project/src/test$ node server.js
 server is listening at localhost:8888
 ```
 
- ※ 아직 백엔드 API가 개발되지 않았다는 가정 하의 데이터 확인을 위한 서버로써, 사용자 생성/수정api는 해당 서버에 작성하지 않았습니다.
+ ※ 아직 백엔드 API가 개발되지 않았다는 가정 하의 데이터 확인을 위한 서버로써, 사용자 생성/수정 api는 해당 서버에 작성하지 않았습니다.
 
 <br>
 
