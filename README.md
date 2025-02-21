@@ -1,13 +1,13 @@
 
 # wisebirds-project
 
-## 프로젝트 화면
+## 구현 화면
 ![캡쳐1](https://github.com/user-attachments/assets/e2443f16-48db-4c5c-97a9-91902acae378)
 ---
 
 <br>
 
-## 사용 라이브러리 및 FrameWork
+## 사용 라이브러리 및 프레임워크
 
 |  |  |
 | --- | --- |
