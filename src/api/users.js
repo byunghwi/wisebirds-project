@@ -1,6 +1,18 @@
 import axios from "axios";
 import { base_url } from "@/lib/constants"
 
+// 로그인 된 사용자 정보
+export const getUserInfo = async () => {
+  try {
+    const response = await axios.get(`${base_url}/auth/me`);
+    return response.data;
+  } catch (error) {
+    console.error("유저 정보를 받아오는 중 에러가 발생했습니다:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
 //사용자 리스트 조회
 export const getUserList = async (params) => {
   try {

@@ -2,7 +2,7 @@
   <div class="bg-blue-500 text-white flex justify-between items-center w-full px-6 h-[50px] fixed">
     <!-- 좌측: 로고 및 탭 메뉴 -->
     <div class="flex items-center">
-      <RouterLink to="/" class="text-xl font-bold pr-4 hover:text-gray-300" >Wisebirds</RouterLink>
+      <RouterLink to="/" class="flex items-center text-xl font-bold pr-4 hover:text-gray-300"><img src="https://cdn.imweb.me/thumbnail/20240208/f26300940b407.png" alt="Wisebirds 로고" class="w-8 h-8 mr-2">Wisebirds</RouterLink>
       <RouterLink to="/campaigns" :class="`px-3 font-semibold hover:text-gray-300 
       ${$route.path === '/campaigns' ? 'text-yellow-400 font-bold border-b-2 border-yellow-40' : ''}`">
         캠페인
@@ -40,7 +40,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { storeToRefs } from 'pinia'
-import { getUserInfo } from '@/api/auth'
+import { getUserInfo } from '@/api/users';
 import { useMainStore } from "@/stores/main.js";
 import { useUserStore } from '@/stores/user';
 import { useModalStore } from '@/stores/modal';
