@@ -39,11 +39,11 @@
 │   │   └── constants.js          - 상수 정의
 │   ├── router**
 │   │   └── index.js              - 라우터 정의
-│   ├── stores                    - 전역 상태관리 store
+│   ├── stores**                  - 전역 상태관리 store
 │   │   ├── main.js
 │   │   ├── modal.js
 │   │   └── user.js
-│   ├── test                      - 백엔드 RestAPI 통신 Test용
+│   ├── test**                    - 백엔드 RestAPI 통신 Test용
 │   │   ├── json                  - 백엔드 통신 test json 데이터
 │   │   └── server.js             - 백엔드 통신 test web server
 └── vite.config.js
