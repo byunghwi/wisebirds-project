@@ -212,15 +212,15 @@ const create = async() => {
     if(res2.result) { 
       alert('사용자 생성이 완료되었습니다.');
       closeModal();
+      initModal();
     } else {
+      initModal();
       showErrorModal();
     }
   } catch (error) {
     console.error(error);
-    showErrorModal();
-  } finally {
-    console.log('초기화 돼야하는디?');
     initModal();
+    showErrorModal();
   }
 }
 </script>
