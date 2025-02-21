@@ -109,4 +109,4 @@ byunghwi@byunghwi:~/wisebirds-project$ npm run dev
 4. [localhost:8086](http://localhost:8086) 브라우저 접속 
 
 ※ vite.config.js 에 **[ 2. 백엔드 RestAPI 통신 Test를 위한 웹 서버 실행 ]** 를 위한 **proxy** 설정이 되어있습니다.  
-( /api 경로 호출 시 [localhost:8888](http://localhost:8888) 로 proxy)
+( /api 이하 경로 호출 시 [localhost:8888](http://localhost:8888) 로 proxy)
