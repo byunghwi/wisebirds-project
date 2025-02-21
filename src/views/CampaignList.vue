@@ -1,12 +1,12 @@
 <template>
-  <div class="">
+  <div class="w-[98%] mx-auto h-full">
     <!-- 상단 바 -->
     <header class="flex justify-between items-center text-gray-700 p-4">
       <h2 class="text-lg font-bold">캠페인 관리</h2>
     </header>
 
     <!-- 캠페인 리스트 -->
-    <div>
+    <div class="overflow-auto h-[calc(100%-50px)]">
       <table class="w-full border-collapse">
         <thead class="text-gray-500 border-t-1 border-b-1 border-gray-300">
           <tr>
@@ -102,9 +102,8 @@ const paginatedCampaigns = computed(() => {
 
 onMounted(async()=>{
   try {
-    const res = await getCampaignList(currentPage.value, 25);  
-    //console.log('res: ', res.result.content);
-    campaigns.value = res.data.content;
+    const res = await getCampaignList(currentPage.value, itemsPerPage);  
+    campaigns.value = res.content;
   } catch (error) {
     showErrorModal();
   }

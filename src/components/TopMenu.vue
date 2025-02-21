@@ -12,8 +12,8 @@
     </div>
 
     <!-- 우측: 사용자 정보 및 역할 선택 -->
-    <div class="flex items-center">
-      <div class="cursor-pointer hover:text-gray-300 flex items-center pr-4" @click.stop="togglePopup">
+    <div class="flex items-center pr-2">
+      <div class="cursor-pointer hover:text-gray-300 flex items-center pr-6" @click.stop="togglePopup">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M5.121 17.804A3 3 0 017 17h10a3 3 0 012.121.804M12 14a4 4 0 100-8 4 4 0 000 8z" />
@@ -22,7 +22,7 @@
       </div>
       <!-- 사용자 정보 팝업 -->
       <div v-if="showPopup" ref="popup"
-        class="absolute top-11 right-30 bg-white shadow-lg rounded-lg p-4 w-42 border border-gray-200">
+        class="absolute top-11 right-30 bg-white shadow-lg rounded-lg p-4 w-52 border border-gray-200">
         <div class="text-center text-gray-600 font-bold text-lg">{{ userInfo.name }}</div>
         <div class="text-center text-gray-600">{{ userInfo.email }}</div>
         <div class="text-center text-gray-400">{{ userInfo.company.name }}</div>
@@ -43,7 +43,12 @@ import { storeToRefs } from 'pinia'
 import { getUserInfo } from '@/api/auth'
 import { useMainStore } from "@/stores/main.js";
 import { useUserStore } from '@/stores/user';
+import { useModalStore } from '@/stores/modal';
+
 import router from '@/router';
+
+const storeModal = useModalStore();
+const { showErrorModal } = storeModal;
 
 const storeMain = useMainStore();
 const { currentAuth } = storeToRefs(storeMain);
@@ -59,7 +64,6 @@ const showPopup = ref(false);
 
 const togglePopup = () => {
  showPopup.value = !showPopup.value
- console.log('showPopup.value: ', showPopup.value)
 }
 
 const changeRole = () => {
@@ -78,9 +82,14 @@ const handleClickOutside = (event) => {
 };
 
 onMounted(async() => {
-  const resUSer = await getUserInfo();
-  userInfo.value = resUSer.data;
-
+  try {
+    const resUSer = await getUserInfo();
+    userInfo.value = resUSer;  
+  } catch (error) {
+    console.error(error);
+    showErrorModal();
+  }
+  
   document.addEventListener("click", handleClickOutside);
 })
 

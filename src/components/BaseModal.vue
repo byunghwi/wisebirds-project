@@ -1,10 +1,14 @@
 <template>
   <div 
     v-if="isOpen" 
-    class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-10"
+    class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center"
   >
+    <!-- 모달 외 배경영역 -->
+    <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div>
+
+    <!-- 모달영역 -->
     <div 
-      class="bg-white p-4 rounded-lg shadow-lg relative"
+      class="bg-white p-4 rounded-lg shadow-lg relative z-10"
       :class="modalSize"
     >
       <button @click="closeModal" class="cursor-pointer absolute top-2 right-2 text-gray-500 hover:text-gray-700">
@@ -12,7 +16,7 @@
       </button>
 
       <!-- title -->
-      <h2 v-if="title" class="text-xl font-semibold mb-4">{{ title }}</h2>
+      <h2 v-if="title" class="text-xl font-semibold mb-4 pb-4">{{ title }}</h2>
 
       <!-- content -->
       <slot></slot>

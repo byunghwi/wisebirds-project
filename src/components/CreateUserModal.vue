@@ -1,6 +1,5 @@
 <template>
   <BaseModal :isOpen="isOpen" title="사용자 생성" size="lg" @close="closeModal">
-    <form @submit.prevent="submitForm">
       <!-- 아이디 -->
       <label class="block text-gray-700 font-medium mb-1">아이디<span class="text-red-500">*</span></label>
       <div class="relative w-full">
@@ -76,25 +75,29 @@
       </p>
 
       <!-- 버튼 -->
-      <div class="flex justify-end mt-4 space-x-8">
+      <div class="flex justify-end pt-4 gap-4">
         <button @click="closeModal" class="cursor-pointer px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
           취소
         </button>
-        <button type="button" :disabled="!isValid" :class="['px-4 py-2 rounded',
+        <button type="button" @click="create" :disabled="!isValid" :class="['px-4 py-2 rounded',
             isValid ? 'bg-blue-500 text-white hover:bg-blue-600 cursor-pointer' 
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           ]">
           저장
         </button>
       </div>
-    </form>
   </BaseModal>
 </template>
 
 <script setup>
 import { computed, ref, watchEffect } from "vue";
 import BaseModal from "@/components/BaseModal.vue";
-import { getisExistEmail } from "@/api/users";
+import { getisExistEmail, createUser } from "@/api/users";
+import { useModalStore } from "@/stores/modal";
+import router from "@/router";
+
+const storeModal = useModalStore();
+const { showErrorModal } = storeModal;
 
 defineProps({
   isOpen: Boolean,
@@ -116,6 +119,22 @@ const nameError = ref(false);
 
 const isValid = computed(() => !idError.value && !passError.value && !confirmError.value && !nameError.value);
 
+//데이터 초기화
+const initModal = () => {
+  idError.value = false
+  passError.value = false;
+  confirmError.value = false;
+  nameError.value = false;
+  newUser.value = {
+    id: "",
+    name: "",
+    password: ""
+  }
+  inputType.value = 'password';
+  confirmType.value = 'password';
+  confirmPassword.value = '';
+}
+
 // validation 체크
 const validateInput = () => {
   //id(이메일) 
@@ -125,11 +144,7 @@ const validateInput = () => {
     idError.value = "올바른 이메일 주소를 입력하세요.";
   } else if (newUser.value.id.length < 9 || newUser.value.id.length > 50) {
     idError.value = "이메일 주소는 9자 이상 50자 이하여야 합니다.";
-  }
-  // else if(getisExistEmail({email: newUser.value.id})){
-  //   idError.value = "이미 사용 중인 이메일입니다. 다른 이메일을 입력하세요.";
-  // } 
-  else {
+  } else {
     idError.value = false;
   }
 
@@ -172,12 +187,6 @@ const closeModal = () => {
   emit("close");
 };
 
-const submitForm = () => {
-  console.log("사용자 생성:", name.value);
-  closeModal();
-};
-
-
 const changeInputType = (field) => {
   if (field === 'inputType') {
     inputType.value = inputType.value === 'password' ? 'text' : 'password';
@@ -185,4 +194,33 @@ const changeInputType = (field) => {
     confirmType.value = confirmType.value === 'password' ? 'text' : 'password';
   }
 };
+
+const create = async() => {
+  try {
+    // 이메일 중복체크
+    const res1 = await getisExistEmail({email: newUser.value.id});
+    if(res1.result){
+      idError.value = "이미 사용 중인 이메일입니다. 다른 이메일을 입력하세요.";
+      return;
+    } else {
+      idError.value = false;
+    }
+
+    // 사용자 생성
+    const params = {name: newUser.value.name, email: newUser.value.id, password: newUser.value.password, repeat_password: confirmPassword.value };
+    const res2 = await createUser(params);
+    if(res2.result) { 
+      alert('사용자 생성이 완료되었습니다.');
+      closeModal();
+    } else {
+      showErrorModal();
+    }
+  } catch (error) {
+    console.error(error);
+    showErrorModal();
+  } finally {
+    console.log('초기화 돼야하는디?');
+    initModal();
+  }
+}
 </script>

@@ -1,9 +1,9 @@
 <template>
-  <div class="h-screen w-screen relative flex-col">
-    <div class="fixed top-0 left-0 w-full z-10  h-[50px]">
+  <div class="h-screen w-screen flex flex-col">
+    <div class="fixed top-0 left-0 w-full z-10 h-[50px]">
       <TopMenu />
     </div>
-    <div class="flex-1 pt-[60px] w-[95%] mx-auto">
+    <div class="flex pt-[50px] items-center justify-center">
       <RouterView />
     </div>
     <ErrorModal :isOpen="isErrorModalOpen" @close="closeModal"/>

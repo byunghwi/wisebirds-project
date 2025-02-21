@@ -20,9 +20,7 @@ app.get('/api/campaigns', (req, res) => {
   const data = loadData(filePath);
   console.log("---- get [campaignList] sucess ---- ")
 
-  res.json({
-    data: data
-  });
+  res.json(data);
 })
 
 // 로그인된 사용자 정보
@@ -32,9 +30,7 @@ app.get('/api/auth/me', (req, res) => {
   const data = loadData(filePath);
   console.log("---- get [LoggedIn User] sucess ---- ")
 
-  res.json({
-    data: data
-  });
+  res.json(data);
 })
 
 // 사용자 리스트트
@@ -44,10 +40,21 @@ app.get('/api/users', (req, res) => {
   const data = loadData(filePath);
   console.log("---- get [User List] sucess ---- ")
 
-  res.json({
-    data: data
-  });
+  res.json(data);
 })
+
+app.get('/api/users/:email/exists', (req, res) => {
+  // JSON 파일 경로 지정
+  const filePath = path.join(__dirname, 'users.json');
+  const data = loadData(filePath);
+  
+  // 이메일 존재 여부 확인
+  const exists = data.content.some(user => user.email === req.params.email);
+  console.log("---- get [User Exist] sucess ---- exist: ", exists)
+
+  res.json({result: exists});
+})
+
 
 app.listen(port, () => {
   console.log(`server is listening at localhost:${port}`);
