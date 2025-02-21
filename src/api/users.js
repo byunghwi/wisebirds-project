@@ -1,5 +1,5 @@
 import axios from "axios";
-import { base_url } from "@/lib/constants"
+import { base_url, itemsPerPage } from "@/lib/constants"
 
 // 로그인 된 사용자 정보
 export const getUserInfo = async () => {
@@ -16,8 +16,8 @@ export const getUserInfo = async () => {
 //사용자 리스트 조회
 export const getUserList = async (params) => {
   try {
-    const page = params.page;
-    const size = params.size;
+    const page = params?.page || 1;
+    const size = params?.size || itemsPerPage; 
 
     const response =  await axios.get(`${base_url}/users`, {
       params: {

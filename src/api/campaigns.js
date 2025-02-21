@@ -1,10 +1,10 @@
 import axios from "axios";
-import { base_url } from "@/lib/constants";
+import { base_url, itemsPerPage } from "@/lib/constants";
 
 // 캠페인 리스트 조회
 export const getCampaignList = async (params) => {
   const page = params?.page || 1;
-  const size = params?.size || 25; 
+  const size = params?.size || itemsPerPage; 
   try {
     const response = await axios.get(`${base_url}/campaigns`, {
       params: {

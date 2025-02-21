@@ -23,8 +23,8 @@
         <tbody>
           <tr v-for="(campaign, index) in paginatedCampaigns" :key="index" class="text-center text-gray-700 border-b-1 border-gray-300">
             <td class="p-1 text-center">
-              <label :class="['inline-flex items-center ', currentAuth !== 'admin' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer']">
-                <input type="checkbox"  v-model="campaign.enabled" class="sr-only peer" :disabled="currentAuth != 'admin'" >
+              <label :class="['inline-flex items-center', !['admin', 'manager'].includes(currentAuth) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer']">
+                <input type="checkbox"  v-model="campaign.enabled" class="sr-only peer" :disabled="!['admin', 'manager'].includes(currentAuth)" >
                 <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-400 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-400 dark:peer-checked:bg-blue-400"></div>
               </label>
             </td>
@@ -32,9 +32,9 @@
             <td class="p-1  text-left">{{ parseCampaignObjective(campaign.campaign_objective) }}</td>
             <td class="p-1  text-right">{{ campaign.impressions.toLocaleString() }}</td>
             <td class="p-1  text-right">{{ campaign.clicks.toLocaleString() }}</td>
-            <td class="p-1  text-right">{{ Math.round(campaign.ctr) }}%</td>
+            <td class="p-1  text-right">{{ campaign.ctr.toFixed(2) }}%</td>
             <td class="p-1  text-right">{{ campaign.video_views }}</td>
-            <td class="p-1  text-right">{{ Math.round(campaign.vtr) }}%</td>
+            <td class="p-1  text-right">{{ campaign.vtr.toFixed(2) }}%</td>
           </tr>
         </tbody>
       </table>

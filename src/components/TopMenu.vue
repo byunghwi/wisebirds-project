@@ -67,8 +67,7 @@ const togglePopup = () => {
 }
 
 const changeRole = () => {
-  console.log(`auth: ${currentAuth.value}, isAdmin: ${isAdmin.value},`);
-  console.log( router.currentRoute.value.path);
+  //console.log(`auth: ${currentAuth.value}, isAdmin: ${isAdmin.value},`);
   if (currentAuth.value !== 'admin' && router.currentRoute.value.path == '/users') {
     router.replace("/");
   }

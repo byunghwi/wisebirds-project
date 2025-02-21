@@ -53,7 +53,7 @@ const nameError = ref(false);
 const validateName = () => {
   if (!newName.value.trim()) {
     nameError.value = "이름을 입력해주세요.";
-  } else if (!/^[가-힣a-zA-Z]{1,16}$/.test(newName.value)) {
+  } else if (!/^[a-zA-Z가-힣]{1,16}$/.test(newName.value)) {
     nameError.value = "이름을 올바르게 입력하세요. (한글, 영문 1~16자 / 숫자, 특수문자, 공백 불가)";
   } else {
     nameError.value = "";
