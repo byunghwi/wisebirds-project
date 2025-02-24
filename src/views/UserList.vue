@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto h-full flex flex-col">
+  <div class="px-8 h-full flex flex-col">
     <!-- 상단 바 -->
     <header class="flex justify-between items-center border-b-1 border-gray-300 text-gray-700 p-4">
       <h2 class="text-lg font-bold">사용자 관리</h2>
