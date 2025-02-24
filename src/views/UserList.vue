@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[98%] mx-auto h-full">
+  <div class="mx-auto h-full flex flex-col">
     <!-- 상단 바 -->
     <header class="flex justify-between items-center border-b-1 border-gray-300 text-gray-700 p-4">
       <h2 class="text-lg font-bold">사용자 관리</h2>
@@ -12,7 +12,7 @@
     </div>
 
     <!-- 사용자 리스트 -->
-    <div class="overflow-auto h-[calc(100%-50px)]">
+    <div class="flex-1 overflow-y-auto">
       <table class="w-full border-collapse">
         <thead class="text-gray-500 border-b-1 border-t-1 border-gray-300">
           <tr>
@@ -34,8 +34,7 @@
     </div>
 
     <!-- 페이지네이션 -->
-         <!-- 페이지네이션 -->
-    <div class="fixed bottom-10 left-1/2 transform -translate-x-1/2">
+    <div class="stickybottom-0 left-0 w-full py-2">
       <Pagination :totalPages="totalPages" :currentPage="currentPage" @update:currentPage="currentPage = $event" />
     </div>
   </div>

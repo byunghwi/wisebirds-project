@@ -1,12 +1,13 @@
 <template>
-  <div class="w-[98%] mx-auto h-full">
+  <div class="mx-auto h-full flex flex-col">
     <!-- 상단 바 -->
     <header class="flex justify-between items-center text-gray-700 p-4">
       <h2 class="text-lg font-bold">캠페인 관리</h2>
     </header>
 
     <!-- 캠페인 리스트 -->
-    <div class="overflow-auto h-[calc(100%-50px)]">
+    <!-- <div class="flex-1 overflow-y-auto"> -->
+    <div class="flex-1 overflow-y-auto">
       <table class="w-full border-collapse">
         <thead class="text-gray-500 border-t-1 border-b-1 border-gray-300">
           <tr>
@@ -21,11 +22,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(campaign, index) in paginatedCampaigns" :key="index" class="text-center text-gray-700 border-b-1 border-gray-300">
+          <tr v-for="(campaign, index) in paginatedCampaigns" :key="index"
+            class="text-center text-gray-700 border-b-1 border-gray-300">
             <td class="p-1 text-center">
-              <label :class="['inline-flex items-center', !['admin', 'manager'].includes(currentAuth) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer']">
-                <input type="checkbox"  v-model="campaign.enabled" class="sr-only peer" :disabled="!['admin', 'manager'].includes(currentAuth)" >
-                <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-400 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-400 dark:peer-checked:bg-blue-400"></div>
+              <label
+                :class="['inline-flex items-center', !['admin', 'manager'].includes(currentAuth) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer']">
+                <input type="checkbox" v-model="campaign.enabled" class="sr-only peer"
+                  :disabled="!['admin', 'manager'].includes(currentAuth)">
+                <div
+                  class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-400 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-400 dark:peer-checked:bg-blue-400">
+                </div>
               </label>
             </td>
             <td class="p-1 text-left">{{ campaign.name }}</td>
@@ -39,9 +45,8 @@
         </tbody>
       </table>
     </div>
-
     <!-- 페이지네이션 -->
-    <div class="fixed bottom-10 left-1/2 transform -translate-x-1/2">
+    <div class="sticky bottom-0 left-0 w-full py-2">
       <Pagination :totalPages="totalPages" :currentPage="currentPage" @update:currentPage="currentPage = $event" />
     </div>
   </div>

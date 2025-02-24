@@ -4,7 +4,7 @@
     class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center"
   >
     <!-- 모달 외 배경영역 -->
-    <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div>
+    <div class="fixed top-0 left-0 w-screen h-screen bg-black opacity-50"></div>
 
     <!-- 모달영역 -->
     <div 
